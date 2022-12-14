@@ -17,6 +17,12 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
     
     @IBOutlet weak var genderTextField: UITextField!
     
+    @IBOutlet weak var unitSelector: UISegmentedControl!
+    
+    @IBOutlet weak var weightTextField: UITextField!
+    
+    @IBOutlet weak var heightTextField: UITextField!
+    
     let genders = ["Male", "Female"]
     
     var pickerView = UIPickerView()
@@ -30,7 +36,6 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         
         ageLabel.text =  String(Int(ageSlider.value.rounded()))
        
-        
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = view.bounds
         gradientLayer.colors = [#colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1).cgColor, #colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1).cgColor]
@@ -38,6 +43,20 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         gradientLayer.startPoint = CGPoint(x: 0, y: 0)
         gradientLayer.endPoint = CGPoint(x: 1, y: 1)
         backgroundColorView.layer.insertSublayer(gradientLayer, at: 0)
+    }
+    
+    
+    @IBAction func unitSelectorAction(_ sender: UISegmentedControl) {
+        if sender.selectedSegmentIndex == 0 {
+            weightTextField.placeholder = "Enter Weight (pounds)"
+            heightTextField.placeholder = "Enter Height (inches)"
+        }
+        
+        if sender.selectedSegmentIndex == 1 {
+            weightTextField.placeholder = "Enter Weight (kg)"
+            heightTextField.placeholder = "Enter Height (meter)"
+        }
+        
     }
     
     override var shouldAutorotate: Bool {
