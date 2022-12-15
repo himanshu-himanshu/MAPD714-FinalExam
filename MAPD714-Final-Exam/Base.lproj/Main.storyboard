@@ -290,6 +290,9 @@
                                     <fontDescription key="titleFontDescription" name="GillSans" family="Gill Sans" pointSize="17"/>
                                     <color key="baseBackgroundColor" red="0.58081901069999997" green="0.088427625600000004" blue="0.31863921880000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </buttonConfiguration>
+                                <connections>
+                                    <action selector="doneBtn:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ZEZ-pf-kYV"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your BMI : 22.2" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QhU-GJ-jA0">
                                 <rect key="frame" x="125" y="745" width="140" height="21"/>
@@ -375,6 +378,7 @@
                         <outlet property="ageSlider" destination="0rg-Cf-xhb" id="fEw-FI-44o"/>
                         <outlet property="backgroundColorView" destination="8bC-Xf-vdC" id="NkN-Wo-p3a"/>
                         <outlet property="bmiTextLabel" destination="QhU-GJ-jA0" id="HRI-Nk-bki"/>
+                        <outlet property="doneBtnConn" destination="UaN-KE-c1Z" id="igG-16-tgF"/>
                         <outlet property="genderTextField" destination="Wwn-Zh-Cq3" id="QbY-qk-Nuh"/>
                         <outlet property="heightTextField" destination="TES-ND-7e7" id="b7G-T9-1cg"/>
                         <outlet property="nameTextField" destination="Ccr-Yr-3VL" id="DUH-pT-byp"/>
@@ -386,6 +390,41 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="129.23076923076923" y="-34.123222748815166"/>
+        </scene>
+        <!--Tracking Screen View Controller-->
+        <scene sceneID="Dab-v9-RbF">
+            <objects>
+                <viewController storyboardIdentifier="TrackingScreenViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="imP-lx-D2e" customClass="TrackingScreenViewController" customModule="MAPD714_Final_Exam" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="e2Z-ax-CfN">
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tracking Screen" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g6x-D0-6nT">
+                                <rect key="frame" x="93" y="64" width="204" height="32"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="204" id="R1d-bB-JZb"/>
+                                    <constraint firstAttribute="height" constant="32" id="yXc-If-AV4"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Futura-Bold" family="Futura" pointSize="24"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="lx3-GQ-GNb"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="g6x-D0-6nT" firstAttribute="leading" secondItem="lx3-GQ-GNb" secondAttribute="leading" constant="93" id="gbi-H4-kih"/>
+                            <constraint firstItem="lx3-GQ-GNb" firstAttribute="trailing" secondItem="g6x-D0-6nT" secondAttribute="trailing" constant="93" id="o78-F7-PcT"/>
+                            <constraint firstItem="g6x-D0-6nT" firstAttribute="top" secondItem="lx3-GQ-GNb" secondAttribute="top" constant="17" id="rW6-x3-oCp"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="backgroundView" destination="e2Z-ax-CfN" id="pCB-Zv-dpC"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="HXH-YY-LOY" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="930.76923076923072" y="-34.123222748815166"/>
         </scene>
     </scenes>
     <resources>

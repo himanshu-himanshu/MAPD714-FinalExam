@@ -10,6 +10,7 @@ import FirebaseFirestore
 
 class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate {
     
+    /** UI Connections below */
     @IBOutlet var backgroundColorView: UIView!
     
     @IBOutlet weak var nameTextField: UITextField!
@@ -30,6 +31,8 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
     
     @IBOutlet weak var resetBtnConn: UIButton!
     
+    @IBOutlet weak var doneBtnConn: UIButton!
+    
     let genders = ["Male", "Female"]
     
     var placeHolder = ""
@@ -45,6 +48,8 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
     var bmi:Float = 0.0
     
     override func viewDidLoad() {
+        
+        // Connections
         super.viewDidLoad()
         pickerView.delegate = self
         pickerView.dataSource = self
@@ -55,8 +60,10 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         bmiTextLabel.text = ""
         resetBtnConn.isEnabled = false
         
+        // Add data into fields on main screen after reloading the app
         loadDataFromFirebase()
         
+        // Add gradient in background
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = view.bounds
         gradientLayer.colors = [#colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1).cgColor, #colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1).cgColor]
@@ -66,7 +73,7 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         backgroundColorView.layer.insertSublayer(gradientLayer, at: 0)
     }
     
-    /** Firebase initialization */
+    // Firebase initialization
     var db = Firestore.firestore()
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
@@ -79,6 +86,9 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         return true
     }
     
+    /**
+        * Calculate function for calculating the Body Mass Index for the user after he clicks the button
+     */
     @IBAction func calculateBtn(_ sender: UIButton) {
         
         if (nameTextField.text!.isEmpty || Int(ageSlider.value.rounded()) == 0 || heightTextField.text!.isEmpty || weightTextField.text!.isEmpty || genderTextField.text!.isEmpty) {
@@ -114,14 +124,14 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
             bmi = ceil(bmi * 10) / 10.0
             
             bmiTextLabel.text = "Your BMI: \(bmi)"
+           
+            assignBMIMessage(bmi: bmi)  // Call function to assign the category according to bmi
             
-            assignBMIMessage(bmi: bmi)
-            
-            saveDataToFirebase()
+            saveDataToFirebase() // Function to save data into firebase
             
             resetBtnConn.isEnabled = true
             
-            // Show alert if fields are empty
+            // Show message to user
             let alert = UIAlertController(title: "Body Mass Index", message: "Your BMI: \(bmi), Category: \(bmiMessage)", preferredStyle: UIAlertController.Style.alert)
             alert.addAction(UIAlertAction(title: "Got it", style: UIAlertAction.Style.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
@@ -130,6 +140,9 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         }
     }
     
+    /**
+        * Assign message after bmi is calculated
+     */
     func assignBMIMessage(bmi: Float) {
         
         if bmi < 16 {
@@ -151,7 +164,9 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         }
     }
     
-    // Firebase Code
+    /**
+        * Function for saving the data from fields and labels to firebase
+     */
     func saveDataToFirebase() {
        
         db.collection("user").document("User").setData([
@@ -172,6 +187,9 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         }
     }
     
+    /**
+        * Function for loading the data into the main screen after app restarts
+     */
     func loadDataFromFirebase() {
         let ref = db.collection("user")
         ref.getDocuments() { [self] (querySnapshot, err) in
@@ -193,6 +211,9 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         }
     }
     
+    /**
+        * Function for clearing all the fields on the screen as well as it deletes data from firebase
+     */
     @IBAction func resetBtn(_ sender: UIButton) {
         nameTextField.text = ""
         heightTextField.text = ""
@@ -211,6 +232,9 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         }
     }
     
+    /**
+        * Function for handling the unit selection
+     */
     @IBAction func unitSelectorAction(_ sender: UISegmentedControl) {
         if sender.selectedSegmentIndex == 0 {
             weightTextField.placeholder = "Enter Weight (pounds)"
@@ -222,6 +246,17 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
             heightTextField.placeholder = "Enter Height (cm)"
         }
         
+    }
+    
+    
+    @IBAction func doneBtn(_ sender: UIButton) {
+        let transition = CATransition()
+        transition.type = CATransitionType.push
+        transition.subtype = CATransitionSubtype.fromTop
+        let stoaryboard = UIStoryboard(name: "Main", bundle: nil)
+        let secondController = stoaryboard.instantiateViewController(withIdentifier: "TrackingScreenViewController") as! TrackingScreenViewController
+        self.view.window!.layer.add(transition, forKey: kCATransition)
+        self.present(secondController, animated: false, completion: nil);
     }
     
     override var shouldAutorotate: Bool {

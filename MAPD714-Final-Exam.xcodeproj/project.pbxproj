@@ -20,6 +20,7 @@
 		A360062A294A493800CC47B8 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = A3600629294A493800CC47B8 /* FirebaseFirestore */; };
 		A360062C294A493800CC47B8 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A360062B294A493800CC47B8 /* FirebaseFirestoreSwift */; };
 		A360062E294A493800CC47B8 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = A360062D294A493800CC47B8 /* FirebaseStorage */; };
+		A3600630294AF7BF00CC47B8 /* TrackingScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A360062F294AF7BF00CC47B8 /* TrackingScreenViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		A3600618294A46F400CC47B8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A360061A294A46F400CC47B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A3600620294A486E00CC47B8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		A360062F294AF7BF00CC47B8 /* TrackingScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackingScreenViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +80,7 @@
 				A3600617294A46F400CC47B8 /* LaunchScreen.storyboard */,
 				A3600620294A486E00CC47B8 /* GoogleService-Info.plist */,
 				A360061A294A46F400CC47B8 /* Info.plist */,
+				A360062F294AF7BF00CC47B8 /* TrackingScreenViewController.swift */,
 			);
 			path = "MAPD714-Final-Exam";
 			sourceTree = "<group>";
@@ -168,6 +171,7 @@
 				A3600611294A46F300CC47B8 /* ViewController.swift in Sources */,
 				A360060D294A46F300CC47B8 /* AppDelegate.swift in Sources */,
 				A360060F294A46F300CC47B8 /* SceneDelegate.swift in Sources */,
+				A3600630294AF7BF00CC47B8 /* TrackingScreenViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
