@@ -10,13 +10,13 @@ import FirebaseCore
 import FirebaseFirestore
 
 class TrackingScreenViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-
+    
     @IBOutlet var backgroundView: UIView!
     
     @IBOutlet weak var tableView: UITableView!
     
     /**
-        * Variable declarations
+     * Variable declarations
      */
     var bmiList:[List] = []
     
@@ -24,9 +24,14 @@ class TrackingScreenViewController: UIViewController, UITableViewDelegate, UITab
     
     let todoListTableIdentifier = "TodoListTableIdentifier"
     
+    var weight: String = ""
+    var height: String = ""
+    var bmi: Float = 0
+    var unit: Int = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Add gradient in background
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = view.bounds
@@ -40,14 +45,14 @@ class TrackingScreenViewController: UIViewController, UITableViewDelegate, UITab
         
         //tableView.reloadData()
         
-
+        
     }
     
     /** Firebase initialization */
     var db = Firestore.firestore()
     
     /**
-        * Function to build the table view and insert todos
+     * Function to build the table view and insert todos
      */
     func buildList() -> Void {
         
@@ -58,7 +63,7 @@ class TrackingScreenViewController: UIViewController, UITableViewDelegate, UITab
                 print("Error getting documents: \(err)")
             } else {
                 bmiList = []
-               
+                
                 for document in querySnapshot!.documents {
                     print(document.data()["date"] as! String)
                     bmiList.append(List(
@@ -81,14 +86,14 @@ class TrackingScreenViewController: UIViewController, UITableViewDelegate, UITab
         
         print("Inside buildList")
     }
-
+    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return bmiList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
+        
         var cell = tableView.dequeueReusableCell(withIdentifier: todoListTableIdentifier)
         if(cell == nil) {
             cell = UITableViewCell(style: UITableViewCell.CellStyle.subtitle, reuseIdentifier: todoListTableIdentifier)
@@ -97,36 +102,48 @@ class TrackingScreenViewController: UIViewController, UITableViewDelegate, UITab
         //cell?.textLabel?.text = list[indexPath.row]
         cell?.textLabel?.text = "BMI: \(bmiList[indexPath.row].bmi)  -  \(bmiList[indexPath.row].date)"
         cell?.detailTextLabel?.text = "Weight: \(String(bmiList[indexPath.row].weight))"
-
+        
         var cellFont = UIFont.systemFont(ofSize: 18, weight: UIFont.Weight.medium)
         
         cellFont = UIFont(name: "Futura", size: 18)!
-
+        
         cell?.textLabel?.font = cellFont
-
+        
         return cell!
         
     }
     
     /**
-        * Swipe Action from right to left (complete todo and delete todo gestures)
+     * Swipe Action from right to left (complete todo and delete todo gestures)
      */
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive, title: "🗑️") { [weak self] (action, view, completionHandler) in
-            self!.deleteTodo(id: indexPath.row)
-              completionHandler(true)
-           }
+            self!.deletBmi(id: indexPath.row)
+            completionHandler(true)
+        }
         deleteAction.backgroundColor = .systemRed
         let config = UISwipeActionsConfiguration(actions: [deleteAction])
         return config
     }
     
     /**
-        * Function for performing delete todo when user long swipes from right to left
-        * :param: id -> Integer to hold todo id
-        * :returns: void
+     * Swipe Action from left to right (edit todo gesture)
      */
-    func deleteTodo(id:Int) {
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let editAction = UIContextualAction(style: .normal, title: "✎") { [weak self] (action, view, completionHandler) in
+            self!.editBmi(id: indexPath.row)
+            completionHandler(true)
+        }
+        editAction.backgroundColor = .systemBlue
+        let config = UISwipeActionsConfiguration(actions: [editAction])
+        config.performsFirstActionWithFullSwipe = true
+        return config
+    }
+    
+    /**
+     * Function for performing delete bmi data
+     */
+    func deletBmi(id:Int) {
         print("Perform Delete")
         let bmiID = bmiList[id].id
         db.collection("bmi").document(bmiID).delete() { err in
@@ -137,5 +154,122 @@ class TrackingScreenViewController: UIViewController, UITableViewDelegate, UITab
                 self.buildList()
             }
         }
+    }
+    
+    /**
+     * Function for performing editing bmi
+     */
+    func editBmi(id:Int) {
+        updateBmi(id: id)
+    }
+    
+    /**
+        * Function that allows to update an entry in the tracking screen
+     */
+    func updateBmi(id: Int) {
+        
+        let bmiID = bmiList[id].id
+        
+        let docRef = db.collection("bmi").document(bmiID)
+        
+        //1. Create the alert controller.
+        let alert = UIAlertController(title: "Update BMI", message: "Enter new weight", preferredStyle: .alert)
+        
+        //2. Add the text field
+        alert.addTextField(configurationHandler: { [self] (textField) -> Void in
+            docRef.getDocument { [self] (document, error) in
+                if let document = document, document.exists {
+                    unit = (((document.data()!["unit"])) as! Int)
+                    if(unit == 1) {
+                        textField.placeholder = "Enter Weight (kg)"
+                    } else {
+                        textField.placeholder = "Enter Weight (pounds)"
+                    }
+                } else {
+                    print("Document does not exist")
+                }
+            }
+            textField.text = ""
+        })
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.destructive, handler: { [self] (action) -> Void in
+            alert.dismiss(animated: true, completion: nil)
+        }))
+        
+        //3. Grab the value from the text field, and print it when the user clicks OK.
+        alert.addAction(UIAlertAction(title: "Update", style: .default, handler: { [self, weak alert] (action) -> Void in
+            let textField = (alert?.textFields![0])! as UITextField
+            if (textField.text == "" || textField.text == " ") {
+                return
+            } else {
+                
+                docRef.getDocument { [self] (document, error) in
+                    if let document = document, document.exists {
+                        
+                        // Store data into varibales
+                        weight = (document.data()!["weight"] as! String)
+                        height = (document.data()!["height"] as! String)
+                        
+                        calculateAndUpdateData(id: id, unit: unit, height: height, weight: textField.text!)
+                    } else {
+                        print("Document does not exist")
+                    }
+                }
+                
+                tableView.reloadData()
+            }
+        }))
+        
+        // 4. Present the alert.
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    /**
+        * Function to calculate new BMI and update it in firebase
+     */
+    func calculateAndUpdateData(id: Int, unit: Int, height: String, weight: String) {
+        
+        print("Inside update")
+        
+        let bmiID = bmiList[id].id
+        
+        var newBmi: Float = 0.0
+        var newWeight: Float = Float(weight)!
+        var newHeight: Float = Float(height)!
+        
+        if(unit == 1) {
+            
+            newHeight = newHeight * 0.01
+            
+            newBmi = newWeight / (newHeight * newHeight)
+            
+            newBmi = ceil(newBmi * 10) / 10.0
+            
+        } else if (unit == 0) {
+            
+            newHeight = newHeight * 0.0254
+            
+            newWeight = newWeight * 0.453592
+            
+            newBmi = newWeight / (newHeight * newHeight)
+            
+            newBmi = ceil(newBmi * 10) / 10.0
+        }
+        
+        db.collection("bmi").document(bmiID).updateData([
+            "bmi": String(newBmi),
+            "weight": String(newWeight),
+            "date": String(Date().formatted(date: .long, time: .omitted))
+        ]) { err in
+            if let err = err {
+                print("Error writing document: \(err)")
+            } else {
+                print("Document successfully written!")
+                self.buildList()
+            }
+        }
+        tableView.reloadData()
+        print("New Data \(newBmi) , \(newWeight) , \(height), \(unit)")
+        
     }
 }

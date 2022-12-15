@@ -277,6 +277,7 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
             "bmi": String(bmi),
             "weight": weightTextField.text!,
             "height": heightTextField.text!,
+            "unit": unitSelector.selectedSegmentIndex,
             "date": String(Date().formatted(date: .long, time: .omitted))
         ]) { err in
             if let err = err {
