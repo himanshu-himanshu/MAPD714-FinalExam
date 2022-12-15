@@ -123,6 +123,8 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
             
             bmi = ceil(bmi * 10) / 10.0
             
+            print(bmi)
+            
             bmiTextLabel.text = "Your BMI: \(bmi)"
            
             assignBMIMessage(bmi: bmi)  // Call function to assign the category according to bmi
@@ -137,6 +139,8 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
             self.present(alert, animated: true, completion: nil)
            
             print("BMI is: \(ceil(bmi * 10) / 10.0) and height is: \(heightM) and Weight is: \(weightKg)")
+            
+            addBMIDataToFirebase()
         }
     }
     
@@ -248,8 +252,11 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         
     }
     
-    
+    /**
+        * Function for handling data saving and transiting to second screen
+     */
     @IBAction func doneBtn(_ sender: UIButton) {
+        
         let transition = CATransition()
         transition.type = CATransitionType.push
         transition.subtype = CATransitionSubtype.fromTop
@@ -257,6 +264,28 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         let secondController = stoaryboard.instantiateViewController(withIdentifier: "TrackingScreenViewController") as! TrackingScreenViewController
         self.view.window!.layer.add(transition, forKey: kCATransition)
         self.present(secondController, animated: false, completion: nil);
+    }
+    
+    /**
+        * Function for handling data saving
+     */
+    func addBMIDataToFirebase() {
+    
+        // Firebase Code
+        var ref: DocumentReference? = nil
+        ref = db.collection("bmi").addDocument(data: [
+            "bmi": String(bmi),
+            "weight": weightTextField.text!,
+            "height": heightTextField.text!,
+            "date": String(Date().formatted(date: .long, time: .omitted))
+        ]) { err in
+            if let err = err {
+                print("Error adding document: \(err)")
+            } else {
+                print("Document added with ID: \(ref!.documentID)")
+            }
+        }
+        
     }
     
     override var shouldAutorotate: Bool {
