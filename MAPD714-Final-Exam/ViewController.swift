@@ -1,8 +1,13 @@
-//
-//  ViewController.swift
-//  MAPD714-Final-Exam
-//  Created by Himanshu on 2022-12-14
-//
+//  File Name: ViewController.swift
+
+//  Authors: Himanshu (301296001)
+//  Subject: MAPD714 iOS Development
+//  Assignment: Final Exam
+
+//  Task: Create BMI Calculator.
+
+//  Date modified: 15/12/2022
+
 
 import UIKit
 import FirebaseCore
@@ -297,6 +302,9 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         ageLabel.text = String(Int(ageSlider.value.rounded()))
     }
     
+    /**
+        * Code for picker view
+     */
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }

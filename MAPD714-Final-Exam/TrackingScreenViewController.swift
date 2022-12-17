@@ -1,9 +1,12 @@
-//
-//  TrackingScreenViewController.swift
-//  MAPD714-Final-Exam
-//
-//  Created by Himanshu on 2022-12-15.
-//
+//  File Name: TrackingScreenViewController.swift
+
+//  Authors: Himanshu (301296001)
+//  Subject: MAPD714 iOS Development
+//  Assignment: Final Exam
+
+//  Task: Create BMI Calculator.
+
+//  Date modified: 15/12/2022
 
 import UIKit
 import FirebaseCore
@@ -44,8 +47,7 @@ class TrackingScreenViewController: UIViewController, UITableViewDelegate, UITab
         buildList()
         
         //tableView.reloadData()
-        
-        
+
     }
     
     /** Firebase initialization */
@@ -87,6 +89,9 @@ class TrackingScreenViewController: UIViewController, UITableViewDelegate, UITab
         print("Inside buildList")
     }
     
+    /**
+        * Table View Code below
+     */
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return bmiList.count
